@@ -25,6 +25,17 @@ defmodule Mix.Tasks.Upsert do
     IO.puts "COMMIT;"
   end
 
+
+  def run(["upsert"]) do
+    IO.puts "# checa la secuencia antes por lod de los inserts SELECT nextval('escuelas_id_seq')"
+    IO.puts "# https://hcmc.uvic.ca/blogs/index.php?blog=22&p=8105&more=1&c=1&tb=1&pb=1"
+    IO.puts "ALTER TABLE escuelas ALTER COLUMN codigopostal TYPE varchar(40);"
+    IO.puts "BEGIN;"
+    #IO.puts "LOCK TABLE escuelas IN SHARE ROW EXCLUSIVE MODE;"
+    IO.puts UpsertFromCsv.process_postgres(UpsertFromCsv.read("assets/cct_act_2016_7_l.csv"))
+    IO.puts "COMMIT;"
+  end
+
   def run(_args) do
     #update general data.
     # update with upsert/insert
@@ -36,4 +47,5 @@ defmodule Mix.Tasks.Upsert do
     #IO.puts UpsertFromCsv.process_postgres(UpsertFromCsv.read("assets/escuelas_2016_corregido_utf.csv"))
     IO.puts "COMMIT;"
   end
+
 end
